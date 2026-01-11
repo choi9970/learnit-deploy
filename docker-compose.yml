@@ -24,6 +24,8 @@ services:
       - .env
     expose:
       - "8080"
+    depends_on:
+      - mysql
     networks:
       - learnit-net
 
@@ -35,9 +37,35 @@ services:
       - .env
     expose:
       - "8000"
+    depends_on:
+      - backend
+    networks:
+      - learnit-net
+
+  mysql:
+    image: mysql:8.0
+    container_name: learnit-mysql
+    restart: always
+    environment:
+      MYSQL_DATABASE: learnit
+      MYSQL_USER: scott
+      MYSQL_PASSWORD: tiger
+      MYSQL_ROOT_PASSWORD: root
+      TZ: Asia/Seoul
+    command:
+      - mysqld
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - learnit-mysql-data:/var/lib/mysql
+    expose:
+      - "3306"
     networks:
       - learnit-net
 
 networks:
   learnit-net:
     driver: bridge
+
+volumes:
+  learnit-mysql-data:
