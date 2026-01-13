@@ -22,6 +22,33 @@ services:
     restart: always
     env_file:
       - .env
+    environment:
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-prod}
+
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL:-jdbc:mysql://learnit-mysql:3306/learnit?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=UTF-8}
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-scott}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-tiger}
+
+      MYBATIS_MAPPER_LOCATIONS: "classpath*:mapper/**/*.xml"
+      MYBATIS_TYPE_ALIASES_PACKAGE: "com.learnit.learnit"
+      MYBATIS_CONFIGURATION_MAP_UNDERSCORE_TO_CAMEL_CASE: "true"
+
+      SPRING_JPA_HIBERNATE_DDL_AUTO: ${SPRING_JPA_HIBERNATE_DDL_AUTO:-none}
+
+      MAIL_GMAIL_HOST: ${MAIL_GMAIL_HOST}
+      MAIL_GMAIL_PORT: ${MAIL_GMAIL_PORT}
+      MAIL_GMAIL_USERNAME: ${MAIL_GMAIL_USERNAME}
+      MAIL_GMAIL_PASSWORD: ${MAIL_GMAIL_PASSWORD}
+
+      MAIL_NAVER_HOST: ${MAIL_NAVER_HOST}
+      MAIL_NAVER_PORT: ${MAIL_NAVER_PORT}
+      MAIL_NAVER_USERNAME: ${MAIL_NAVER_USERNAME}
+      MAIL_NAVER_PASSWORD: ${MAIL_NAVER_PASSWORD}
+
+      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID}
+      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET}
+      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GITHUB_SCOPE: ${GITHUB_SCOPE:-read:user,user:email}
+
     expose:
       - "8080"
     depends_on:
@@ -56,8 +83,13 @@ services:
       - mysqld
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
+      - --bind-address=0.0.0.0
+      - --init-connect=SET NAMES utf8mb4
+      - --skip-character-set-client-handshake
     volumes:
       - learnit-mysql-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
     expose:
       - "3306"
     networks:
@@ -69,3 +101,4 @@ networks:
 
 volumes:
   learnit-mysql-data:
+
